@@ -19,6 +19,7 @@ jobs:
           sudo apt install unzip -y
           unzip -q NDK
           ANDROID_NDK_HOME=$(pwd)/android-ndk-r21b
+          sed -i 's/  -g/  -O2 -fvisibility=hidden -s/g' $(pwd)/android-ndk-r21b/build/cmake/android.toolchain.cmake
       - name: Build
         run: |
           cd build
