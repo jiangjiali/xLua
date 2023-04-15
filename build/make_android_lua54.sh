@@ -26,4 +26,4 @@ function build() {
 
 build android-26 armeabi-v7a arm-linux-androideabi-4.9
 build android-26 arm64-v8a  arm-linux-androideabi-clang
-build android-26 x86 x86-4.9
+# build android-26 x86 x86-4.9
