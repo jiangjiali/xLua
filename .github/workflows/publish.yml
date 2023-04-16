@@ -18,7 +18,6 @@ jobs:
           wget -O NDK -q https://dl.google.com/android/repository/android-ndk-r21b-linux-x86_64.zip
           sudo apt install unzip -y
           unzip -q NDK
-          sed -i '455d' $(pwd)/android-ndk-r21b/build/cmake/android.toolchain.cmake
           ANDROID_NDK_HOME=$(pwd)/android-ndk-r21b
       - name: Build
         run: |
