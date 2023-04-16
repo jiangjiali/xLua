@@ -26,7 +26,12 @@ if (NOT LUA_VERSION)
 endif()
 
 #begin lua-rapidjson
-set (RAPIDJSON_SRC lua-rapidjson/source/rapidjson.cpp)
+set (RAPIDJSON_SRC 
+    lua-rapidjson/source/Document.cpp
+	lua-rapidjson/source/rapidjson.cpp
+	lua-rapidjson/source/Schema.cpp
+    lua-rapidjson/source/values.cpp
+	)
 set_property(
 	SOURCE ${RAPIDJSON_SRC}
 	APPEND
