@@ -57,6 +57,7 @@ set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 #end lua-protobuf
 
 #begin lua-mongo
+find_package(mongoc-1.0 1.16 REQUIRED)
 set (RAPIDJSON_SRC 
     lua-mongo/main.c
 	)
