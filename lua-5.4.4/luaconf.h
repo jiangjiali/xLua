@@ -652,11 +652,14 @@
 ** Change that if you do not want to use C locales. (Code using this
 ** macro must include the header 'locale.h'.)
 */
-#if !defined(lua_getlocaledecpoint)
+// #if !defined(lua_getlocaledecpoint)
 // #define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
-#define lua_getlocaledecpoint() ('.')
+// #endif
+#ifdef __ANDROID__
+#define lua_getlocaledecpoint() '.'
+#elif !defined(lua_getlocaledecpoint)
+#define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
 #endif
-
 
 /*
 ** macros to improve jump prediction, used mostly for error handling
