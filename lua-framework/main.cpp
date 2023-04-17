@@ -15,6 +15,8 @@ static const luaL_Reg methods[] = {
         {NULL, NULL}
 };
 
+extern "C" {
+
 LUALIB_API int lua_framework(lua_State *L) {
     luaL_newlib(L, methods);
 
@@ -22,4 +24,5 @@ LUALIB_API int lua_framework(lua_State *L) {
     lua_setfield(L, -2, "_NAME");
 
     return 1;
+}
 }
