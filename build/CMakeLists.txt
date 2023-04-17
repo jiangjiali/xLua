@@ -57,17 +57,17 @@ set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 #end lua-protobuf
 
 #begin lua-mongo
-set (RAPIDJSON_SRC 
+set (MONGO_SRC 
     lua-mongo/main.c
 	)
 set_property(
-	SOURCE ${RAPIDJSON_SRC}
+	SOURCE ${MONGO_SRC}
 	APPEND
 	PROPERTY COMPILE_DEFINITIONS
 	LUA_LIB
 )
 list(APPEND THIRDPART_INC  lua-mongo)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
+set (THIRDPART_SRC ${THIRDPART_SRC} ${MONGO_SRC})
 #end lua-mongo
 
 set(LUA_SRC_PATH lua-${LUA_VERSION})
