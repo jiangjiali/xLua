@@ -55,6 +55,21 @@ list(APPEND THIRDPART_INC lua-protobuf)
 set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 #end lua-protobuf
 
+#begin lua-sqlite3
+set (SQLITE_SRC 
+	lua-sqlite3/sqlite3.c
+    lua-sqlite3/lsqlite3.c
+)
+set_property(
+	SOURCE ${SQLITE_SRC}
+	APPEND
+	PROPERTY COMPILE_DEFINITIONS
+	LUA_LIB
+)
+list(APPEND THIRDPART_INC lua-sqlite3)
+set (THIRDPART_SRC ${THIRDPART_SRC} ${SQLITE_SRC})
+#end lua-sqlite3
+
 set(LUA_SRC_PATH lua-${LUA_VERSION})
 
 set ( LUA_IDSIZE 120 CACHE STRING "gives the maximum size for the description of the source." )
