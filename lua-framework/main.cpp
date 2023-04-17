@@ -15,7 +15,7 @@ static const luaL_Reg methods[] = {
         {NULL, NULL}
 };
 
-int lua_framework(lua_State *L) {
+LUALIB_API int lua_framework(lua_State *L) {
     luaL_newlib(L, methods);
 
     lua_pushliteral(L, "framework");
