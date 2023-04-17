@@ -56,20 +56,6 @@ list(APPEND THIRDPART_INC lua-protobuf)
 set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 #end lua-protobuf
 
-#begin lua-mongo
-set (MONGO_SRC 
-    lua-mongo/main.c
-	)
-set_property(
-	SOURCE ${MONGO_SRC}
-	APPEND
-	PROPERTY COMPILE_DEFINITIONS
-	LUA_LIB
-)
-list(APPEND THIRDPART_INC  lua-mongo)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${MONGO_SRC})
-#end lua-mongo
-
 set(LUA_SRC_PATH lua-${LUA_VERSION})
 
 set ( LUA_IDSIZE 120 CACHE STRING "gives the maximum size for the description of the source." )
