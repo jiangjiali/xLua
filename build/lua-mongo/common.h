@@ -23,8 +23,8 @@
 #pragma once
 
 #include <lauxlib.h>
-#include <mongoc/mongoc.h>
-#include <bson/bson.h>
+#include <mongoc.h>
+#include <bson.h>
 
 #define MODNAME "lua-mongo"
 #define VERSION "1.2.3"
