@@ -16,10 +16,15 @@ function build() {
     ABI=$2
     TOOLCHAIN_ANME=$3
     BUILD_PATH=build54.Android.${ABI}
-    sed '455s/.*/  -s/' ${NDK}/build/cmake/android.toolchain.cmake
-    sudo apt install libmongoc-1.0-0 -y
-    sudo apt install libbson-1.0-0 -y
+    wget https://github.com/mongodb/mongo-c-driver/releases/download/1.23.3/mongo-c-driver-1.23.3.tar.gz
+    tar -xzf mongo-c-driver-1.23.3.tar.gz
+    cd mongo-c-driver-1.23.3/
+    cmake .
+    make
+    make install
+    cd ..
     # sed -i '455d' ${NDK}/build/cmake/android.toolchain.cmake
+    sed '455s/.*/  -s/' ${NDK}/build/cmake/android.toolchain.cmake
     cmake -H. -B${BUILD_PATH} -DLUA_VERSION=5.4.3 -DANDROID_ABI=${ABI} -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_ANME}
     cmake --build ${BUILD_PATH} --config Release
     mkdir -p plugin_lua54/Plugins/Android/libs/${ABI}/
