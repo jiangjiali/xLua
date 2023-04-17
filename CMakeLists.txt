@@ -11,7 +11,6 @@ project(XLua)
 
 option ( UINT_ESPECIALLY "using custom ulong" OFF )
 option ( GC64 "using gc64" OFF )
-option ( LUAC_COMPATIBLE_FORMAT "compatible format" OFF )
 
 find_path(XLUA_PROJECT_DIR NAMES SConstruct
     PATHS 
@@ -22,7 +21,7 @@ find_path(XLUA_PROJECT_DIR NAMES SConstruct
 MARK_AS_ADVANCED(XLUA_PROJECT_DIR)
 
 if (NOT LUA_VERSION)
-    set(LUA_VERSION "5.4.3")
+    set(LUA_VERSION "5.4.4")
 endif()
 
 #begin lua-rapidjson
@@ -101,30 +100,16 @@ source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} LUA_CORE)
 source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} LUA_LIB)
 source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} XLUA_CORE)
 
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Switch")
-    add_library(xlua STATIC
-        ${LUA_CORE}
-        ${LUA_LIB}
-        ${XLUA_CORE}
-        ${THIRDPART_SRC}
-    )
-    target_compile_options(xlua PRIVATE -m64 -mcpu=cortex-a57+fp+simd+crypto+crc -fno-common -fno-short-enums -ffunction-sections -fdata-sections -fPIC -fms-extensions)
-else ( )
-    add_library(xlua SHARED
-        ${LUA_CORE}
-        ${LUA_LIB}
-        ${XLUA_CORE}
-        ${THIRDPART_SRC}
-    )
-endif ( )
+add_library(xlua SHARED
+    ${LUA_CORE}
+    ${LUA_LIB}
+    ${XLUA_CORE}
+    ${THIRDPART_SRC}
+)
 
 if ( WIN32 AND NOT CYGWIN )
     target_compile_definitions (xlua PRIVATE LUA_BUILD_AS_DLL)
 endif ( )
-
-if (LUAC_COMPATIBLE_FORMAT)
-    target_compile_definitions (xlua PRIVATE LUAC_COMPATIBLE_FORMAT)
-endif ()
 
 if(UINT_ESPECIALLY)
     ADD_DEFINITIONS(-DUINT_ESPECIALLY)
