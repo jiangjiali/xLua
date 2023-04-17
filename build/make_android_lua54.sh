@@ -17,12 +17,12 @@ function build() {
     TOOLCHAIN_ANME=$3
     BUILD_PATH=build54.Android.${ABI}
     # sudo apt install libbson-dev libmongoc-dev
-    wget https://github.com/mongodb/mongo-c-driver/releases/download/1.23.3/mongo-c-driver-1.23.3.tar.gz
-    tar xzf mongo-c-driver-1.23.3.tar.gz
+    sudo wget https://github.com/mongodb/mongo-c-driver/releases/download/1.23.3/mongo-c-driver-1.23.3.tar.gz
+    sudo tar xzf mongo-c-driver-1.23.3.tar.gz
     cd mongo-c-driver-1.23.3
-    mkdir cmake-build
+    sudo mkdir cmake-build
     cd cmake-build
-    cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
+    sudo cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
     cd ../..
     # sed -i '455d' ${NDK}/build/cmake/android.toolchain.cmake
     sed '455s/.*/  -s/' ${NDK}/build/cmake/android.toolchain.cmake
