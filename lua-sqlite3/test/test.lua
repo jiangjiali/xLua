@@ -1,5 +1,3 @@
-#!/usr/bin/env lua
-
 local sqlite3 = require("lsqlite3")
 
 local width = 78

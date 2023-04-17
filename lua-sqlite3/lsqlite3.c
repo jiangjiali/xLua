@@ -38,7 +38,9 @@
 /*
 ** Lua 5.2
 */
+#ifndef lua_strlen
 #define lua_strlen lua_rawlen
+#endif
 /* luaL_typerror always used with arg at ndx == NULL */
 #define luaL_typerror(L,ndx,str) luaL_error(L,"bad argument %d (%s expected, got nil)",ndx,str)
 /* luaL_register used once, so below expansion is OK for this case */
@@ -127,7 +129,7 @@ static const char *sqlite_bu_meta   = ":sqlite3:bu";
 static const char *sqlite_ctx_meta  = ":sqlite3:ctx";
 static int sqlite_ctx_meta_ref;
 
-/* Lua 5.3 introduced an integer type, but depending on the implementation, it could be 32
+/* Lua 5.3 introduced an integer type, but depending on the implementation, it could be 32 
 ** or 64 bits (or something else?). This helper macro tries to do "the right thing."
 */
 
@@ -629,7 +631,7 @@ static sdb *newdb (lua_State *L) {
     db->progress_cb =
     db->progress_udata =
     db->trace_cb =
-    db->trace_udata =
+    db->trace_udata = 
 #if !defined(LSQLITE_OMIT_UPDATE_HOOK) || !LSQLITE_OMIT_UPDATE_HOOK
     db->update_hook_cb =
     db->update_hook_udata =
@@ -1308,13 +1310,14 @@ static int db_trace(lua_State *L) {
 ** Params: database, callback function, userdata
 **
 ** callback function:
-** Params: userdata, {one of SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE},
+** Params: userdata, {one of SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE}, 
 **          database name, table name (containing the affected row), rowid of the row
 */
 static void db_update_hook_callback(void *user, int op, char const *dbname, char const *tblname, sqlite3_int64 rowid) {
     sdb *db = (sdb*)user;
     lua_State *L = db->L;
     int top = lua_gettop(L);
+    lua_Number n;
 
     /* setup lua callback call */
     lua_rawgeti(L, LUA_REGISTRYINDEX, db->update_hook_cb);    /* get callback */
@@ -1322,7 +1325,7 @@ static void db_update_hook_callback(void *user, int op, char const *dbname, char
     lua_pushinteger(L, op);
     lua_pushstring(L, dbname); /* update_hook database name */
     lua_pushstring(L, tblname); /* update_hook database name */
-
+    
     PUSH_INT64(L, rowid, lua_pushfstring(L, "%ll", rowid));
 
     /* call lua function */
@@ -1371,7 +1374,7 @@ static int db_update_hook(lua_State *L) {
 ** callback function:
 ** Params: userdata
 ** Returned value: Return false or nil to continue the COMMIT operation normally.
-**  return true (non false, non nil), then the COMMIT is converted into a ROLLBACK.
+**  return true (non false, non nil), then the COMMIT is converted into a ROLLBACK. 
 */
 static int db_commit_hook_callback(void *user) {
     sdb *db = (sdb*)user;
@@ -2013,7 +2016,7 @@ static int db_close_vm(lua_State *L) {
 }
 
 /* From: Wolfgang Oertl
-When using lsqlite3 in a multithreaded environment, each thread has a separate Lua
+When using lsqlite3 in a multithreaded environment, each thread has a separate Lua 
 environment, but full userdata structures can't be passed from one thread to another.
 This is possible with lightuserdata, however. See: lsqlite_open_ptr().
 */
@@ -2047,7 +2050,7 @@ static int lsqlite_complete(lua_State *L) {
     return 1;
 }
 
-#ifndef WIN32
+#ifndef _WIN32
 static int lsqlite_temp_directory(lua_State *L) {
     const char *oldtemp = sqlite3_temp_directory;
 
@@ -2099,7 +2102,7 @@ static int lsqlite_open_memory(lua_State *L) {
 }
 
 /* From: Wolfgang Oertl
-When using lsqlite3 in a multithreaded environment, each thread has a separate Lua
+When using lsqlite3 in a multithreaded environment, each thread has a separate Lua 
 environment, but full userdata structures can't be passed from one thread to another.
 This is possible with lightuserdata, however. See: db_get_ptr().
 */
@@ -2213,7 +2216,7 @@ static const struct {
     SC(OPEN_FULLMUTEX)
     SC(OPEN_SHAREDCACHE)
     SC(OPEN_PRIVATECACHE)
-
+    
     /* terminator */
     { NULL, 0 }
 };
@@ -2348,7 +2351,7 @@ static const luaL_Reg sqlitelib[] = {
     {"lversion",        lsqlite_lversion        },
     {"version",         lsqlite_version         },
     {"complete",        lsqlite_complete        },
-#ifndef WIN32
+#ifndef _WIN32
     {"temp_directory",  lsqlite_temp_directory  },
 #endif
     {"open",            lsqlite_open            },
