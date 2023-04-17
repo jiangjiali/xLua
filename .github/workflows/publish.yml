@@ -21,12 +21,11 @@ jobs:
           ANDROID_NDK_HOME=$(pwd)/android-ndk-r21b
       - name: Build
         run: |
-          cd build
           ./make_android_lua54.sh
       - name: Upload
         uses: actions/upload-artifact@v3.1.2
         with:
-          path: ./build/plugin_lua54/**/*
+          path: ./plugin_lua54/**/*
           name: plugin_lua54
 
   windows:
@@ -38,13 +37,12 @@ jobs:
       
       - name: Build
         run: |
-          cd build
           .\make_win_lua54.bat
       - uses: ilammy/msvc-dev-cmd@v1.12.1
       - name: Upload
         uses: actions/upload-artifact@v3.1.2
         with:
-          path: ./build/plugin_lua54/**/*
+          path: ./plugin_lua54/**/*
           name: plugin_lua54
 
   publish:
