@@ -57,7 +57,7 @@ set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 
 #begin lua-sqlite3
 set (SQLITE3_SRC 
-	lua-sqlite3/lua_sqlite3.c
+	lua-sqlite3/lsqlite3.c
 )
 set_property(
 	SOURCE ${SQLITE3_SRC}
