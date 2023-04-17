@@ -55,20 +55,6 @@ list(APPEND THIRDPART_INC lua-protobuf)
 set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
 #end lua-protobuf
 
-#begin lua-dbase
-set (DBASE_SRC 
-	lua-dbase/luadbase.c
-)
-set_property(
-	SOURCE ${DBASE_SRC}
-	APPEND
-	PROPERTY COMPILE_DEFINITIONS
-	LUA_LIB
-)
-list(APPEND THIRDPART_INC lua-dbase)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${DBASE_SRC})
-#end lua-dbase
-
 set(LUA_SRC_PATH lua-${LUA_VERSION})
 
 set ( LUA_IDSIZE 120 CACHE STRING "gives the maximum size for the description of the source." )
