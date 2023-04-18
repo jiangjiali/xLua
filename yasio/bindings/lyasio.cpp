@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 /*
 The MIT License (MIT)
-Copyright (c) 2012-2022 HALX99
+Copyright (c) 2012-2023 HALX99
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -214,9 +214,7 @@ YASIO_LUA_API int luaopen_yasio(lua_State* L)
           case YOPT_C_REMOTE_HOST:
             service->set_option(opt, static_cast<int>(args[0]), args[1].as<const char*>());
             break;
-#  if YASIO_VERSION_NUM >= 0x033100
-          case YOPT_C_LFBFD_IBTS:
-#  endif
+          case YOPT_C_UNPACK_STRIP:
           case YOPT_C_LOCAL_PORT:
           case YOPT_C_REMOTE_PORT:
           case YOPT_C_KCP_CONV:
@@ -279,8 +277,8 @@ YASIO_LUA_API int luaopen_yasio(lua_State* L)
   lyasio::register_ibstream<ibstream, ibstream_view, obstream>(yasio_lib, "ibstream");
   lyasio::register_ibstream<fast_ibstream, fast_ibstream_view, fast_obstream>(yasio_lib, "fast_ibstream");
 
-  yasio_lib["highp_clock"] = &highp_clock<steady_clock_t>;
-  yasio_lib["highp_time"]  = &highp_clock<system_clock_t>;
+  yasio_lib["highp_clock"] = &highp_clock<yasio::steady_clock_t>;
+  yasio_lib["highp_time"]  = &highp_clock<yasio::system_clock_t>;
 
   yasio_lib["unwrap_ptr"] = [](lua_State* L) -> int {
     auto& pkt  = *(packet_t*)lua_touserdata(L, 1);
@@ -297,7 +295,7 @@ YASIO_LUA_API int luaopen_yasio(lua_State* L)
   };
 
   // ##-- yasio enums
-#  define YASIO_EXPORT_ENUM(v) yasio_lib[#  v] = v
+#  define YASIO_EXPORT_ENUM(v) yasio_lib[#v] = v
   YASIO_EXPORT_ENUM(YCK_TCP_CLIENT);
   YASIO_EXPORT_ENUM(YCK_TCP_SERVER);
   YASIO_EXPORT_ENUM(YCK_UDP_CLIENT);
@@ -316,6 +314,8 @@ YASIO_LUA_API int luaopen_yasio(lua_State* L)
   YASIO_EXPORT_ENUM(YOPT_S_TCP_KEEPALIVE);
   YASIO_EXPORT_ENUM(YOPT_S_EVENT_CB);
   YASIO_EXPORT_ENUM(YOPT_C_UNPACK_PARAMS);
+  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_STRIP);
+  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_NO_BSWAP);
   YASIO_EXPORT_ENUM(YOPT_C_LFBFD_PARAMS); // alias for YOPT_C_UNPACK_PARAMS
   YASIO_EXPORT_ENUM(YOPT_C_LOCAL_HOST);
   YASIO_EXPORT_ENUM(YOPT_C_LOCAL_PORT);
@@ -326,7 +326,6 @@ YASIO_LUA_API int luaopen_yasio(lua_State* L)
   YASIO_EXPORT_ENUM(YOPT_C_ENABLE_MCAST);
   YASIO_EXPORT_ENUM(YOPT_C_DISABLE_MCAST);
   YASIO_EXPORT_ENUM(YOPT_C_KCP_CONV);
-  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_NO_BSWAP);
   YASIO_EXPORT_ENUM(YOPT_C_MOD_FLAGS);
 
   YASIO_EXPORT_ENUM(YCF_REUSEADDR);
@@ -468,9 +467,9 @@ namespace lyasio
 {
 #  define kaguya_obstream_class(_Stream, _BaseStream) kaguya::UserdataMetatable<_Stream, _BaseStream>().setConstructors<_Stream(), _Stream(size_t)>()
 #  define kaguya_obstream_base_class(_BaseStream) kaguya::UserdataMetatable<_BaseStream>().setConstructors<_BaseStream(_BaseStream::buffer_type*)>()
-#  define kaguya_ibstream_view_class(_StreamView, _OStream)                                                                                                    \
+#  define kaguya_ibstream_view_class(_StreamView, _OStream) \
     kaguya::UserdataMetatable<_StreamView>().setConstructors<_StreamView(), _StreamView(const void*, size_t), _StreamView(const _OStream*)>()
-#  define kaguya_ibstream_class(_Stream, _StreamView, _OStream)                                                                                                \
+#  define kaguya_ibstream_class(_Stream, _StreamView, _OStream) \
     kaguya::UserdataMetatable<_Stream, _StreamView>().setConstructors<_Stream(yasio::sbyte_buffer), _Stream(const _OStream*)>()
 
 template <typename _Stream, typename _BaseStream>
@@ -660,9 +659,7 @@ end
                                    service->set_option(opt, static_cast<int>(args[0]), static_cast<const char*>(args[1]));
                                    break;
 
-#  if YASIO_VERSION_NUM >= 0x033100
-                                 case YOPT_C_LFBFD_IBTS:
-#  endif
+                                 case YOPT_C_UNPACK_STRIP:
                                  case YOPT_C_LOCAL_PORT:
                                  case YOPT_C_REMOTE_PORT:
                                  case YOPT_C_KCP_CONV:
@@ -712,8 +709,8 @@ end
                                                                               kaguya_ibstream_class(fast_ibstream, fast_ibstream_view, fast_obstream),
                                                                               kaguya_ibstream_view_class(fast_ibstream_view, fast_obstream));
 
-  yasio_lib.setField("highp_clock", &highp_clock<steady_clock_t>);
-  yasio_lib.setField("highp_time", &highp_clock<system_clock_t>);
+  yasio_lib.setField("highp_clock", &highp_clock<yasio::steady_clock_t>);
+  yasio_lib.setField("highp_time", &highp_clock<yasio::system_clock_t>);
 
   yasio_lib.setField("unwrap_ptr", [](lua_State* L) -> int {
     auto& pkt  = *(packet_t*)lua_touserdata(L, 1);
@@ -730,7 +727,7 @@ end
   });
 
   // ##-- yasio enums
-#  define YASIO_EXPORT_ENUM(v) yasio_lib[#  v] = v
+#  define YASIO_EXPORT_ENUM(v) yasio_lib[#v] = v
   YASIO_EXPORT_ENUM(YCK_TCP_CLIENT);
   YASIO_EXPORT_ENUM(YCK_TCP_SERVER);
   YASIO_EXPORT_ENUM(YCK_UDP_CLIENT);
@@ -749,6 +746,8 @@ end
   YASIO_EXPORT_ENUM(YOPT_S_TCP_KEEPALIVE);
   YASIO_EXPORT_ENUM(YOPT_S_EVENT_CB);
   YASIO_EXPORT_ENUM(YOPT_C_UNPACK_PARAMS);
+  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_STRIP);
+  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_NO_BSWAP);
   YASIO_EXPORT_ENUM(YOPT_C_LFBFD_PARAMS); // alias for YOPT_C_UNPACK_PARAMS
   YASIO_EXPORT_ENUM(YOPT_C_LOCAL_HOST);
   YASIO_EXPORT_ENUM(YOPT_C_LOCAL_PORT);
@@ -759,7 +758,6 @@ end
   YASIO_EXPORT_ENUM(YOPT_C_ENABLE_MCAST);
   YASIO_EXPORT_ENUM(YOPT_C_DISABLE_MCAST);
   YASIO_EXPORT_ENUM(YOPT_C_KCP_CONV);
-  YASIO_EXPORT_ENUM(YOPT_C_UNPACK_NO_BSWAP);
   YASIO_EXPORT_ENUM(YOPT_C_MOD_FLAGS);
 
   YASIO_EXPORT_ENUM(YCF_REUSEADDR);
