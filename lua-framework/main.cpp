@@ -5,7 +5,8 @@ static int add(lua_State *L) {
     int num1 = lua_tonumber(L, 1);
     int num2 = lua_tonumber(L, 2);
     int sum = num1 + num2;
-    lua_pushnumber(L, sum);
+    lua_pushinteger(L,sum); //返回整数型
+//    lua_pushnumber(L, sum); 浮点
     return 1;
 }
 
