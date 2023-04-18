@@ -589,15 +589,11 @@ ADD_SUBDIRECTORY (include)
 # Directory for lib and tools
 ADD_SUBDIRECTORY (src)
 
-# Docs
-ADD_SUBDIRECTORY (docs)
-
 # Tests
 IF (CARES_BUILD_TESTS OR CARES_BUILD_CONTAINER_TESTS)
 	ENABLE_TESTING ()
 	ADD_SUBDIRECTORY (test)
 ENDIF ()
-
 
 # Export targets
 IF (CARES_INSTALL)
