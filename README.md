@@ -1,6 +1,16 @@
 ## C#下Lua编程支持
-
 xLua为Unity、 .Net、 Mono等C#环境增加Lua脚本编程的能力，借助xLua，这些Lua代码可以方便的和C#相互调用。
+
+### 编译库
+* yasio v3.39.9 https://github.com/yasio/yasio
+* lua-sqlite3 v0.9.5 http://lua.sqlite.org/index.cgi/home
+* lua-rapidjson v0.7.1 https://github.com/xpol/lua-rapidjson
+* lua-protobuf v0.4.0 https://github.com/starwing/lua-protobuf
+
+### 依赖库
+* c-ares v1.19.0 https://github.com/c-ares/c-ares
+* sol v3.3.0 https://github.com/ThePhD/sol2
+* sol2 v3.3.0 https://github.com/ThePhD/sol2
 
 ## 执行文件的权限问题
 * git update-index --chmod=+x make_android_lua54.sh
