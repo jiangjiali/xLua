@@ -47,15 +47,15 @@ if (ANDROID)
 endif()
 
 set (YASIO_SRC
-		lua-yasio/xxsocket.cpp
-		lua-yasio/yasio.cpp
-		lua-yasio/bindings/lyasio.cpp
-		lua-yasio/bindings/yasio_ni.cpp
+		yasio/xxsocket.cpp
+		yasio/yasio.cpp
+		yasio/bindings/lyasio.cpp
+		yasio/bindings/yasio_ni.cpp
 		)
 
 if (XLUA_BUILD_WITH_CARES AND ANDROID)
 	set (YASIO_SRC ${YASIO_SRC}
-			lua-yasio/platform/yasio_jni.cpp
+			yasio/platform/yasio_jni.cpp
 			)
 endif()
 
@@ -64,7 +64,7 @@ set_property(
 		APPEND
 		PROPERTY COMPILE_DEFINITIONS
 )
-list(APPEND THIRDPART_INC lua-yasio)
+list(APPEND THIRDPART_INC yasio)
 set (THIRDPART_SRC ${THIRDPART_SRC} ${YASIO_SRC})
 
 if (XLUA_BUILD_WITH_CARES)
