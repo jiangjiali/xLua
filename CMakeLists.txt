@@ -25,15 +25,6 @@ if (NOT LUA_VERSION)
     set(LUA_VERSION "5.4.4")
 endif()
 
-#c++ standard
-if (NOT DEFINED CXX_STD)
-	set (CXX_STD 14)
-endif()
-message(STATUS "CXX_STD=${CXX_STD}")
-set(CMAKE_CXX_STANDARD ${CXX_STD})
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 #begin lua-framework
 set (FRAMEWORK_SRC
 		lua-framework/lua_framework.cpp
@@ -152,3 +143,11 @@ else ( )
         ${THIRDPART_LIB} 
     )
 endif ( )
+
+# strip
+message("CMAKE_STRIP=${CMAKE_STRIP}")
+if (LINUX OR ANDROID)
+	add_custom_command(TARGET xlua POST_BUILD
+			COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
+			)
+endif()
