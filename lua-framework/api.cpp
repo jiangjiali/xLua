@@ -5,15 +5,14 @@ static int add(lua_State *L) {
     int num1 = lua_tonumber(L, 1);
     int num2 = lua_tonumber(L, 2);
     int sum = num1 + num2;
-    lua_pushinteger(L,sum); //返回整数型
-//    lua_pushnumber(L, sum); 浮点
+    lua_pushnumber(L, sum);
     return 1;
 }
 
 //注册函数
 static const luaL_Reg methods[] = {
-        {"add", add},
-        {NULL, NULL}
+        {"add",   add},
+        {nullptr, nullptr}
 };
 
 extern "C" {
