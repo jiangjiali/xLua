@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+#cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.0.0)
 
 if ( WIN32 AND NOT CYGWIN AND NOT ( CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" ) AND NOT ANDROID)
 	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT" CACHE STRING "")
@@ -7,14 +8,10 @@ if ( WIN32 AND NOT CYGWIN AND NOT ( CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" ) 
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd" CACHE STRING "")
 endif ()
 
-project(XLua)
+project(XLua VERSION "2.1.16")
 
 option ( UINT_ESPECIALLY "using custom ulong" OFF )
 option ( GC64 "using gc64" OFF )
-option ( XLUA_BUILD_WITH_CARES "build with c-ares support" ON )
-option ( YASIO_USE_SHARED_PACKET "" ON)
-
-message(STATUS "XLUA_BUILD_WITH_CARES=${XLUA_BUILD_WITH_CARES}")
 
 find_path(XLUA_PROJECT_DIR NAMES SConstruct
     PATHS 
@@ -27,64 +24,6 @@ MARK_AS_ADVANCED(XLUA_PROJECT_DIR)
 if (NOT LUA_VERSION)
     set(LUA_VERSION "5.4.4")
 endif()
-
-#c++ standard
-if (NOT DEFINED CXX_STD)
-	set (CXX_STD 14)
-endif()
-message(STATUS "CXX_STD=${CXX_STD}")
-set(CMAKE_CXX_STANDARD ${CXX_STD})
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-#begin yasio
-if (ANDROID)
-	if (NOT THIRDPART_LIB)
-		set(THIRDPART_LIB "-llog")
-	else()
-		set(THIRDPART_LIB "${THIRDPART_LIB} -llog")
-	endif()
-endif()
-
-set (YASIO_SRC
-		yasio/xxsocket.cpp
-		yasio/yasio.cpp
-		yasio/bindings/lyasio.cpp
-		yasio/bindings/yasio_ni.cpp
-		)
-
-if (XLUA_BUILD_WITH_CARES AND ANDROID)
-	set (YASIO_SRC ${YASIO_SRC}
-			yasio/platform/yasio_jni.cpp
-			)
-endif()
-
-set_property(
-		SOURCE ${YASIO_SRC}
-		APPEND
-		PROPERTY COMPILE_DEFINITIONS
-)
-list(APPEND THIRDPART_INC yasio)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${YASIO_SRC})
-
-if (XLUA_BUILD_WITH_CARES)
-	#begin c-ares
-	set(CARES_STATIC ON CACHE BOOL "Build c-ares as static library" FORCE)
-	set(CARES_SHARED OFF CACHE BOOL "Build c-ares as shared library" FORCE)
-	set(CARES_BUILD_TOOLS OFF CACHE BOOL "Build c-ares tools" FORCE)
-	set(CARES_INSTALL OFF CACHE BOOL "Create installation targets (chain builders may want to disable this)" FORCE)
-	if(CMAKE_OSX_ARCHITECTURES)
-		set(CMAKE_OSX_ARCHITECTURES "${CMAKE_OSX_ARCHITECTURES}" CACHE STRING "Passing osx arch to c-ares" FORCE)
-	endif()
-	add_subdirectory(c-ares)
-	include_directories($<TARGET_FILE_DIR:c-ares>)
-	if( LINUX AND (NOT ANDROID) )
-		message(STATUS "Add -fPIC for c-ares for resolve link error")
-		target_compile_options(c-ares PRIVATE "-fPIC")
-	endif()
-	#end c-ares
-endif ()
-#end yasio
 
 #begin lua-framework
 set (FRAMEWORK_SRC
@@ -117,20 +56,6 @@ set_property(
 list(APPEND THIRDPART_INC  lua-rapidjson/include)
 set (THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
 #end lua-rapidjson
-
-#begin lua-profobuf
-set (LPB_SRC 
-	lua-protobuf/pb.c
-)
-set_property(
-	SOURCE ${LPB_SRC}
-	APPEND
-	PROPERTY COMPILE_DEFINITIONS
-	LUA_LIB
-)
-list(APPEND THIRDPART_INC lua-protobuf)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${LPB_SRC})
-#end lua-protobuf
 
 #begin lua-sqlite3
 set (SQLITE_SRC 
@@ -218,62 +143,3 @@ else ( )
         ${THIRDPART_LIB} 
     )
 endif ( )
-
-
-if ( BUILD_SHARED_LIBS )
-	target_compile_definitions (xlua PUBLIC YASIO_BUILD_SHARED_LIBS=1)
-endif ()
-
-# begin additional compiler flags
-if (XLUA_BUILD_WITH_CARES)
-	target_link_libraries(xlua c-ares)
-	target_compile_definitions (xlua PUBLIC YASIO_HAVE_CARES=1)
-endif ()
-target_compile_definitions (xlua PUBLIC YASIO_ENABLE_ARES_PROFILER=1)
-# end additional compiler flags
-
-# fix default lua_newuserdata can't return aligned pointer properly
-# MSVC max_align_t=double, lua already handle properly
-if (NOT MSVC)
-	message(STATUS "Define LUAI_USER_ALIGNMENT_T for non-msvc compiler to solve address align issue!")
-	# see also: https://github.com/llvm/llvm-project/blob/master/clang/lib/Headers/__stddef_max_align_t.h
-	if(APPLE)
-		target_compile_definitions (xlua PUBLIC "LUAI_USER_ALIGNMENT_T=long double")
-	else()
-		target_compile_definitions (xlua PUBLIC LUAI_USER_ALIGNMENT_T=max_align_t)
-	endif()
-endif()
-
-# strip
-message("CMAKE_STRIP=${CMAKE_STRIP}")
-if (LINUX OR ANDROID)
-	add_custom_command(TARGET xlua POST_BUILD
-			COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
-			)
-endif()
-
-# config yasio options for xlua
-macro(yasio_config_pred pred)
-	if(${pred})
-		target_compile_definitions(xlua PUBLIC ${pred}=1)
-	endif()
-endmacro()
-macro(yasio_config_option optname optval)
-	if(${optname})
-		target_compile_definitions(xlua PUBLIC ${optname}=${optval})
-	endif()
-endmacro()
-yasio_config_pred(YASIO_VERBOSE_LOG)
-yasio_config_pred(YASIO_USE_SPSC_QUEUE)
-yasio_config_pred(YASIO_USE_SHARED_PACKET)
-yasio_config_pred(YASIO_DISABLE_OBJECT_POOL)
-yasio_config_pred(YASIO_ENABLE_ARES_PROFILER)
-yasio_config_pred(YASIO_HAVE_CARES)
-yasio_config_pred(YASIO_HAVE_KCP)
-yasio_config_option(YASIO_SSL_BACKEND "${YASIO_SSL_BACKEND}")
-# yasio_config_pred(YASIO_DISABLE_CONCURRENT_SINGLETON)
-yasio_config_pred(YASIO_ENABLE_UDS)
-yasio_config_pred(YASIO_NT_COMPAT_GAI)
-yasio_config_pred(YASIO_MINIFY_EVENT)
-yasio_config_pred(YASIO_HAVE_HALF_FLOAT)
-yasio_config_pred(YASIO_NO_JNI_ONLOAD)
