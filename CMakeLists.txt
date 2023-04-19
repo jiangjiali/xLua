@@ -88,7 +88,8 @@ endif ()
 
 #begin lua-framework
 set (FRAMEWORK_SRC
-		lua-framework/api.cpp
+		lua-framework/lua_framework.cpp
+		lua-framework/f_math.cpp
 		)
 set_property(
 		SOURCE ${FRAMEWORK_SRC}
