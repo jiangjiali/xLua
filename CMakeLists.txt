@@ -40,7 +40,7 @@ set (THIRDPART_SRC ${THIRDPART_SRC} ${FRAMEWORK_SRC})
 #end lua-framework
 
 #begin lua-rapidjson
-set (RAPIDJSON_SRC 
+set (RAPIDJSON_SRC
     lua-rapidjson/source/Document.cpp
 	lua-rapidjson/source/rapidjson.cpp
 	lua-rapidjson/source/Schema.cpp
@@ -145,6 +145,8 @@ endif ( )
 
 # strip
 message("CMAKE_STRIP=${CMAKE_STRIP}")
-add_custom_command(TARGET xlua POST_BUILD
-	COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
-)
+if (ANDROID)
+	add_custom_command(TARGET xlua POST_BUILD
+			COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
+			)
+endif()
