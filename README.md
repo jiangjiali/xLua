@@ -3,7 +3,7 @@ xLua为Unity、 .Net、 Mono等C#环境增加Lua脚本编程的能力，借助xL
 
 ### 编译库
 * 移除 yasio v3.39.9 https://github.com/yasio/yasio
-* lua-sqlite3 v0.9.5 http://lua.sqlite.org/index.cgi/home
+* 移除 lua-sqlite3 v0.9.5 http://lua.sqlite.org/index.cgi/home
 * lua-rapidjson v0.7.1 https://github.com/xpol/lua-rapidjson
 * 移除 lua-protobuf v0.4.0 https://github.com/starwing/lua-protobuf
 
