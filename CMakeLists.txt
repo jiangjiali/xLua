@@ -145,8 +145,6 @@ endif ( )
 
 # strip
 message("CMAKE_STRIP=${CMAKE_STRIP}")
-if (ANDROID)
-	add_custom_command(TARGET xlua POST_BUILD
-			COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
-			)
-endif()
+add_custom_command(TARGET xlua POST_BUILD
+	COMMAND ${CMAKE_STRIP} ${PROJECT_BINARY_DIR}/libxlua.so -o ${PROJECT_BINARY_DIR}/libxlua.so
+)
