@@ -10,6 +10,7 @@ endif ()
 project(XLua VERSION "2.1.16")
 
 option(UINT_ESPECIALLY "using custom ulong" OFF)
+option(LUAC_COMPATIBLE_FORMAT "compatible format" OFF)
 
 find_path(XLUA_PROJECT_DIR NAMES SConstruct
         PATHS
@@ -131,6 +132,10 @@ endif ()
 
 if (UINT_ESPECIALLY)
     ADD_DEFINITIONS(-DUINT_ESPECIALLY)
+endif ()
+
+if (LUAC_COMPATIBLE_FORMAT)
+    target_compile_definitions(xlua PRIVATE LUAC_COMPATIBLE_FORMAT)
 endif ()
 
 if (WIN32 AND NOT CYGWIN)
