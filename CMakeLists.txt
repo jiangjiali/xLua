@@ -10,7 +10,6 @@ endif ()
 project(XLua VERSION "2.1.16")
 
 option ( UINT_ESPECIALLY "using custom ulong" OFF )
-option ( GC64 "using gc64" OFF )
 
 find_path(XLUA_PROJECT_DIR NAMES SConstruct
     PATHS 
@@ -21,7 +20,7 @@ find_path(XLUA_PROJECT_DIR NAMES SConstruct
 MARK_AS_ADVANCED(XLUA_PROJECT_DIR)
 
 if (NOT LUA_VERSION)
-    set(LUA_VERSION "5.4.4")
+    set(LUA_VERSION "5.3.5")
 endif()
 
 #begin lua-framework
