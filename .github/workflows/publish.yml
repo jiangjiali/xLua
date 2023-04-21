@@ -45,9 +45,26 @@ jobs:
           path: ./plugin_lua54/**/*
           name: plugin_lua54
 
+  windows-luac:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v3.5.2
+      - name: Insatll MSVC
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Build
+        run: |
+          .\luac\make_win64.bat
+      - uses: ilammy/msvc-dev-cmd@v1.12.1
+      - name: Upload
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          path: ./plugin_lua54/**/*
+          name: plugin_lua54
+
   publish:
     runs-on: ubuntu-latest
-    needs: [windows,android]
+    needs: [windows,windows-luac,android]
     steps:
       - uses: actions/download-artifact@v3.0.2
         with:
