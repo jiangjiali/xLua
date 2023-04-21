@@ -13,7 +13,7 @@ xLua为Unity、 .Net、 Mono等C#环境增加Lua脚本编程的能力，借助xL
 * yasio 依赖 sol2 v3.3.0 https://github.com/ThePhD/sol2
 
 ## 执行文件的权限问题
-* git update-index --chmod=+x make_android_lua54.sh
+* git update-index --chmod=+x make_android_lua53.sh
 
 ## Lua版本修改
 ```
