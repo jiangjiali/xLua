@@ -54,12 +54,13 @@ jobs:
 
       - name: Build
         run: |
-          .\luac\make_win64.bat
+          cd luac
+          .\make_win64.bat
       - uses: ilammy/msvc-dev-cmd@v1.12.1
       - name: Upload53
         uses: actions/upload-artifact@v3.1.2
         with:
-          path: ./luac/plugin_lua53/**/*
+          path: ./plugin_lua53/**/*
           name: plugin_lua53
 
   publish:
