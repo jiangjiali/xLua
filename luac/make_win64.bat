@@ -7,4 +7,3 @@ copy /Y build64\Release\luac.exe plugin_lua53\Plugins\luac\luac.exe
 copy /Y build64\Release\lua.exe plugin_lua53\Plugins\luac\lua.exe
 
 pause
-
