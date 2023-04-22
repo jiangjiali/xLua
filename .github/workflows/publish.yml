@@ -60,7 +60,7 @@ jobs:
       - name: Upload53
         uses: actions/upload-artifact@v3.1.2
         with:
-          path: ./plugin_lua53/**/*
+          path: ./luac/plugin_lua53/**/*
           name: plugin_lua53
 
   publish:
