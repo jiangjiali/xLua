@@ -37,7 +37,7 @@ jobs:
       
       - name: Build
         run: |
-          .\make_win_lua53.bat
+          .\make_win64_lua53.bat
       - uses: ilammy/msvc-dev-cmd@v1.12.1
       - name: Upload53
         uses: actions/upload-artifact@v3.1.2
