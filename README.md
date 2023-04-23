@@ -14,6 +14,9 @@ xLua为Unity、 .Net、 Mono等C#环境增加Lua脚本编程的能力，借助xL
 
 ## 执行文件的权限问题
 * git update-index --chmod=+x make_android_lua53.sh
+* git update-index --chmod=+x make_ios_lua53.sh
+* git update-index --chmod=+x make_osx_lua53.sh
+* git update-index --chmod=+x make_osx_silicon_lua53.sh
 
 ## Lua版本修改
 ```
