@@ -20,7 +20,7 @@ MARK_AS_ADVANCED(LUAC_PROJECT_DIR)
 if (NOT LUA_VERSION)
     set(LUA_VERSION "5.3.5")
 endif ()
-set(LUA_SRC_PATH lua-${LUA_VERSION})
+set(LUA_SRC_PATH ../lua-${LUA_VERSION})
 
 set ( LUA_IDSIZE 120 CACHE NUMBER "gives the maximum size for the description of the source." )
 
