@@ -31,7 +31,7 @@ include_directories(
         ${LUA_SRC_PATH}
         ${CMAKE_CURRENT_BINARY_DIR}
 )
-if (LUA_VERSION == "5.3.5")
+if ("${LUA_VERSION}" STREQUAL "5.3.5")
     set(LUA_CORE
             ${LUA_SRC_PATH}/lapi.c
             ${LUA_SRC_PATH}/lcode.c
