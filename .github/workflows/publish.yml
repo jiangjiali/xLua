@@ -1,10 +1,10 @@
 name: publish
 
-on:
+on: 
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'tag name'
+        description: 'tag name'     
         required: true
 
 jobs:
@@ -28,43 +28,16 @@ jobs:
           path: ./plugin_lua53/**/*
           name: plugin_lua53
 
-  ios:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3.5.2
-      - name: Build
-        run: |
-          ./make_ios_lua53.sh
-      - name: Upload53
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          path: ./plugin_lua53/**/*
-          name: plugin_lua53
-
-  osx:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3.5.2
-      - name: Build
-        run: |
-          ./make_osx_lua53.sh
-          ./make_osx_silicon_lua53.sh
-      - name: Upload53
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          path: ./plugin_lua53/**/*
-          name: plugin_lua53
-
   windows:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v3.5.2
       - name: Insatll MSVC
         uses: microsoft/setup-msbuild@v1.3.1
-
+      
       - name: Build
         run: |
-          .\make_win64_lua53.bat
+          .\make_win_lua53.bat
       - uses: ilammy/msvc-dev-cmd@v1.12.1
       - name: Upload53
         uses: actions/upload-artifact@v3.1.2
@@ -92,17 +65,17 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [ windows,windows-luac,osx,ios,android ]
+    needs: [windows,windows-luac,android]
     steps:
       - uses: actions/download-artifact@v3.0.2
         with:
           name: plugin_lua53
           path: plugin_lua53/
-
+          
       - name: Create Release Asset
         run: |
           cd plugin_lua53/ && tar cvfz ../lua53_${{ github.event.inputs.tag_name }}.tgz Plugins && cd -
-
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.1.4
