@@ -42,11 +42,11 @@ set(THIRDPART_SRC ${THIRDPART_SRC} ${FRAMEWORK_SRC})
 
 #begin lpeg
 set(LPEG_SRC
-        lpeg-0.12/lptree.c
-        lpeg-0.12/lpcap.c
-        lpeg-0.12/lpcode.c
-        lpeg-0.12/lpprint.c
-        lpeg-0.12/lpvm.c
+        lua-lpeg/lptree.c
+        lua-lpeg/lpcap.c
+        lua-lpeg/lpcode.c
+        lua-lpeg/lpprint.c
+        lua-lpeg/lpvm.c
         )
 set_property(
         SOURCE ${LPEG_SRC}
@@ -54,9 +54,25 @@ set_property(
         PROPERTY COMPILE_DEFINITIONS
         LUA_LIB
 )
-list(APPEND THIRDPART_INC lpeg0.12)
+list(APPEND THIRDPART_INC lua-lpeg)
 set(THIRDPART_SRC ${THIRDPART_SRC} ${LPEG_SRC})
 #end lpeg
+
+#begin FFI
+set(FFI_SRC
+        lua-ffi/parser.c
+        lua-ffi/ctype.c
+        lua-ffi/ffi.c
+        )
+set_property(
+        SOURCE ${FFI_SRC}
+        APPEND
+        PROPERTY COMPILE_DEFINITIONS
+        LUA_LIB
+)
+list(APPEND THIRDPART_INC lua-ffi)
+set(THIRDPART_SRC ${THIRDPART_SRC} ${FFI_SRC})
+#end FFI
 
 #begin lua-rapidjson
 set(RAPIDJSON_SRC
@@ -74,21 +90,6 @@ set_property(
 list(APPEND THIRDPART_INC lua-rapidjson/include)
 set(THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
 #end lua-rapidjson
-
-#begin lua-sqlite3
-set (SQLITE_SRC
-        lua-sqlite3/sqlite3.c
-        lua-sqlite3/lsqlite3.c
-        )
-set_property(
-        SOURCE ${SQLITE_SRC}
-        APPEND
-        PROPERTY COMPILE_DEFINITIONS
-        LUA_LIB
-)
-list(APPEND THIRDPART_INC lua-sqlite3)
-set (THIRDPART_SRC ${THIRDPART_SRC} ${SQLITE_SRC})
-#end lua-sqlite3
 
 set(LUA_IDSIZE 120 CACHE STRING "gives the maximum size for the description of the source.")
 configure_file(${LUA_SRC_PATH}/luaconf.h.in ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h)
