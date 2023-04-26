@@ -58,22 +58,6 @@ list(APPEND THIRDPART_INC lua-lpeg)
 set(THIRDPART_SRC ${THIRDPART_SRC} ${LPEG_SRC})
 #end lpeg
 
-#begin FFI
-set(FFI_SRC
-        lua-ffi/parser.c
-        lua-ffi/ctype.c
-        lua-ffi/ffi.c
-        )
-set_property(
-        SOURCE ${FFI_SRC}
-        APPEND
-        PROPERTY COMPILE_DEFINITIONS
-        LUA_LIB
-)
-list(APPEND THIRDPART_INC lua-ffi)
-set(THIRDPART_SRC ${THIRDPART_SRC} ${FFI_SRC})
-#end FFI
-
 #begin lua-rapidjson
 set(RAPIDJSON_SRC
         lua-rapidjson/source/Document.cpp
